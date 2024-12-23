@@ -1,124 +1,135 @@
-# Ask the user to input a number of unit (course / student)
-def input_numStudents():
-    return int(input(f"Enter the number of students in this class: "))
+class Student:
+    def __init__(self):
+        self.__id = input("Enter the student's id: ")
+        self.__name = input("Enter the student's name: ")
+        self.__dob = input("Enter the student's dob: ")
 
-# Ask the user to enter a list of info for an type
-def input_infos():
-
-    # TODO: input info for the type (student/course info)
-
-    students = []
-    num_Studenets = input_numStudents()
-   
-    for i in range(num_Studenets):
-        student_id = input(f"Enter ID for student {i + 1}: ")
-        student_name = input(f"Enter name for student {i + 1}: ")
-        student_dob = input(f"Enter date of birth (dd/mm/yyyy) for student {i + 1}: ")
-        students.append({'id': student_id, 'name': student_name, 'dob': student_dob, 'marks': {}})
+    # Encapsulation part
+    def get_id(self):
+        return self.__id
     
-    return students
-
-# Input the student mark in a course base on the course id
-def input_mark(students, courses):
-
-    # TODO: check mark in student or not
-    # If not, enter the mark for the course
-
-    course_id = input("Enter the course ID to input marks: ")
-    for student in students:
-        mark = float(input(f"Enter marks for {student['name']} (ID: {student['id']}): "))
-        student["marks"][course_id] = mark
-
-# Display a list of students
-def list_students(students):
-
-    # TODO: check what happens if there's no student (hint: len(students))
+    def get_name(self):
+        return self.__name
     
-    if len(students) == 0:  # Check if there are no students
-        print("There aren't any students yet.")
-        return
+    def get_dob(self):
+        return self.__dob
 
-    # TODO: display the student list
+class Course:
+    def __init__(self):
+        self.__id = input("Enter the course's id: ")
+        self.__name = input("Enter the course's name: ")
     
-    print("Here is the student list: ")
+    def get_id(self):
+        return self.__id
+    
+    def get_name(self):
+        return self.__name
 
-    # TODO: add loop function to check the info of student
-    
-    for student in students:
-        print(f"ID: {student['id']}, Name: {student['name']}, DoB: {student['dob']}")
-        if student["marks"]:
-            print("   Marks:")
-            for course_id, mark in student["marks"].items():
-                print(f"     {course_id}: {mark}")
+class Utils:
+    # Ask the user to input something
+    def input_something(args):
+        while True:
+            try:
+                value = int(input(f"Enter the number of {args}: "))
+                if value > 0:
+                    return value
+                else:
+                    print("Please enter a positive number.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
 
-    # print(f"{i+1}. {student['id']} - {student['name']} - {student['DoB']}")
+    # Show the list
+    @staticmethod
+    def show(items):
+        if not items:
+            print("No items available.")
+            return
+        for i, item in enumerate(items):
+            print(f"{i + 1}. {item.get_id()} - {item.get_name()}")
 
-    # TODO: check if mark student and print out the information
-    # if "marks" in student:
-    #     print("Marks (Course Id - Mark): ", end="")   
+class University:
+    def __init__(self):
+        # Initialize the list for DATA option
+        self.__num_students = 0
+        self.__num_courses = 0
+        self.__students = []
+        self.__courses = []
 
-# Display a list of courses
-def list_courses(courses):
-   
-    # TODO: check what happens if there's no course (hint: len(course))
+    def get_num_students(self):
+        return self.__num_students
     
-    if len(students) == 0:
-        print("There aren't any courses yet")
-        return
-        
-    print("Here is the course list: ")
+    def get_num_courses(self):
+        return self.__num_courses
     
-    # TODO: add loop function to check the info of course
-    
-    for course in courses:
-        print(f"ID: {course['id']}, Name: {course['name']}")
-    
-    # print(f"{i+1}. {course['id']} - {course['name']}")
+    def get_students(self):
+        return self.__students
+
+    def get_courses(self):
+        return self.__courses
+
+    def set_num_students(self):
+        std_numb = self.get_num_students()
+        self.__num_students = Utils.input_something("students")            # Example of polyphomism
+
+    def set_num_courses(self):
+        crs_numb = self.get_num_courses()
+        self.__num_courses = Utils.input_something("courses")              # Example of polyphomism
+
+    def set_students(self):
+        for _ in range(self.__num_students):
+            self.__students.append(Student())
+
+    def set_courses(self):
+        for _ in range(self.__num_courses):
+            self.__courses.append(Course())
+
+    # Display a list of students
+    def list_students(self):
+        if not self.__students:
+            print("No students available.")
+            return
+        print("Student list:")
+        Utils.show(self.__students)
+
+    # Display a list of courses
+    def list_courses(self):
+        if not self.__courses:
+            print("No courses available.")
+            return
+        print("Course list:")
+        Utils.show(self.__courses)
 
 # Main function for the "game"
 def main():
-    # Initialize the list for DATA option
-    courses = []
-    students = []
-    num_students = 0
-    num_courses = 0
+    univ = University()
 
     while True:
         print("""
-Options:
-0. Exit
-1. Input Students
-2. Input Courses
-3. Input Marks
-4. List Students
-5. List Courses
-""")
-        
-        option = int(input("Enter your choice: "))
-
+    Options:
+    0. Exit
+    1. Input number of students
+    2. Input number of courses
+    3. Input student details
+    4. Input course details
+    5. List students
+    6. List courses
+    """) 
+        option = int(input("Your choice: "))
         if option == 0:
-            print("Exiting program. Goodbye!")
             break
 
         elif option == 1:
-            students = input_infos()
-
+            univ.set_num_students()
         elif option == 2:
-            num_courses = int(input("Enter the number of courses: "))
-            for i in range(num_courses):
-                course_id = input(f"Enter ID for course {i + 1}: ")
-                name = input(f"Enter name for course {i + 1}: ")
-                courses.append({"id": course_id, "name": name})
-
+            univ.set_num_courses()
         elif option == 3:
-            input_mark(students, courses)
-
+            univ.set_students()
         elif option == 4:
-            list_students(students)
-
+            univ.set_courses()
         elif option == 5:
-            list_courses(courses)
-        
+            univ.list_students()
+        elif option == 6:
+            univ.list_courses()
         else:
             print("Invalid input. Please try again!")
 
