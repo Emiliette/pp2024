@@ -181,5 +181,3 @@ def curses_main(stdscr):
         stdscr.refresh()
         stdscr.getkey()
 
-if __name__ == "__main__":
-    curses.wrapper(curses_main)
